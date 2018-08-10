@@ -1,0 +1,2 @@
+2. add text classification kernel
+3. add image classification kernel
