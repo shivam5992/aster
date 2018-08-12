@@ -213,7 +213,6 @@ class maggle():
 
 
 	def _submission(self):
-
 		## add the intro text cell
 		text = """	## Step 6 : Create Submission File
 
