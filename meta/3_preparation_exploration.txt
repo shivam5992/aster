@@ -1,0 +1,101 @@
+<text>
+## Step 2: Dataset Preparation and Exploration
+Load the train and test dataset into memory
+</text>
+
+<code>
+## read dataset
+train_df = pd.read_csv('../input/train 2.csv')
+test_df = pd.read_csv("../input/test 2.csv")
+
+## get predictor and target variables
+_target = "Survived"
+_id = "PassengerId" 
+
+_target = "author"
+_id = "id" 
+tag = "text"
+
+Y = train_df[_target]
+distinct_Y = Y.value_counts().index
+test_id = test_df[_id]
+
+## drop the target and id columns
+train_df = train_df.drop([_target, _id], axis=1)
+test_df = test_df.drop([_id], axis=1)
+
+textcol = "text"
+</code>
+
+<text>
+### 2.1 Dataset snapshot and summary
+</text>
+
+<code>
+## snapshot of train and test
+train_df.head()
+</code>
+
+
+<code>
+## summary of train and test
+# if tag != "text":
+train_df.describe()
+</code>
+
+
+<text>
+### 2.2 Target variable distribution
+</text>
+
+<code>
+tar_dist = dict(Counter(Y.values))
+
+xx = list(tar_dist.keys())
+yy = list(tar_dist.values())
+
+plt.figure(figsize=(6,5))
+sns.set(style="whitegrid")
+ax = sns.barplot(x=xx, y=yy)
+ax.set_title('Distribution of Target')
+ax.set_ylabel('count');
+ax.set_xlabel(_target);
+</code>
+
+<text>
+### 2.3 Missing Value Counts
+</text>
+
+<code>
+mcount = train_df.isna().sum()
+xx = mcount.index 
+yy = mcount.values
+
+plt.figure(figsize=(6,5))
+sns.set(style="whitegrid")
+ax = sns.barplot(x=xx, y=yy)
+ax.set_title('Number of Missing Values')
+ax.set_ylabel('Number of Columns');
+</code>
+
+<text>
+### 2.4 Variable Correlations 
+
+Lets plot the correlations among the variables
+</text>
+
+<code>
+corr = train_df.corr()
+
+mask = np.zeros_like(corr, dtype=np.bool)
+mask[np.triu_indices_from(mask)] = True
+plt.figure(figsize=(6,5))
+f, ax = plt.subplots(figsize=(11, 9))
+cmap = sns.diverging_palette(220, 10, as_cmap=True)
+sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0, 
+            square=True, linewidths=.5, cbar_kws={"shrink": .5});
+</code>
+
+
+
+

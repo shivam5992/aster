@@ -1,0 +1,25 @@
+<text>
+## Step 1: Prepare Environment
+Lets load the required libraries to be used
+</text>
+
+<code>
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import KFold
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_curve
+from xgboost import plot_importance
+from collections import Counter
+import matplotlib.pyplot as plt
+from sklearn import metrics
+import seaborn as sns 
+import xgboost as xgb 
+import pandas as pd
+import numpy as np 
+import itertools
+</code>

@@ -1,0 +1,93 @@
+<text>
+## Step 3: Data Preprocessing
+
+In the data preprocessing step, we will perform label encoding of categorical variables and handle missing values.
+
+### 3.1 Label Encoding
+In this step, convert the categorical variables into label encoded forms 
+</text>
+
+<code>
+if tag != "text":
+    columns = train_df.columns
+    num_cols = train_df._get_numeric_data().columns
+    cat_cols = list(set(columns) - set(num_cols))
+
+    for col in cat_cols: 
+        le = LabelEncoder()
+        le.fit(list(train_df[col].values) + list(test_df[col].values))
+        train_df[col] = le.transform(list(train_df[col].values))
+        test_df[col] = le.transform(list(test_df[col].values))
+
+if Y.dtype.name == "object":
+    le = LabelEncoder()
+    Y = le.fit_transform(Y.values)
+</code>
+
+
+<text>
+### 3.2 Missing Values Treatment
+
+Handle the missing values, for continuous variables, replace by mean. For categorical variables, replace by mode
+</text>
+
+<code>
+if tag != "text":
+    ## for numerical columns, replace the missing values by mean
+    train_df[num_cols] = train_df[num_cols].fillna(train_df[num_cols].mean())
+    test_df[num_cols] = test_df[num_cols].fillna(test_df[num_cols].mean())
+
+    ## for categorical columns, replace the missing values by mode
+    train_df[cat_cols] = train_df[cat_cols].fillna(train_df[cat_cols].mode())
+    test_df[cat_cols] = test_df[cat_cols].fillna(test_df[cat_cols].mode())
+</code>
+
+
+
+<text>
+### 3.3 Feature Engineering 
+
+In this section, we will create relevant features which can be used in the modelling
+</text>
+
+
+
+
+<code>
+if tag == "text":
+    tfidf = TfidfVectorizer(min_df=3,  max_features=None, analyzer='word', 
+                        token_pattern=r'\w{1,}', stop_words = 'english')
+    tfidf.fit(list(train_df[textcol].values))
+    xtrain =  tfidf.transform(train_df[textcol].values) 
+    xtest =  tfidf.transform(test_df[textcol].values)
+else:
+    xtrain = train_df
+    xtest = test_df
+</code>
+
+
+
+<text>
+### 3.4 Train and Validation sets split
+
+Create the training and validation sets for training the model and validating it
+</text>
+
+
+
+
+
+
+<code>
+X_train, X_valid, y_train, y_valid = train_test_split(xtrain, Y, test_size=0.20, random_state=2018)
+</code>
+
+
+
+
+
+
+
+
+
+
