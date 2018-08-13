@@ -8,7 +8,7 @@ In this step, convert the categorical variables into label encoded forms
 </text>
 
 <code>
-if tag != "text":
+if tag != "doc":
     columns = train_df.columns
     num_cols = train_df._get_numeric_data().columns
     cat_cols = list(set(columns) - set(num_cols))
@@ -32,7 +32,7 @@ Handle the missing values, for continuous variables, replace by mean. For catego
 </text>
 
 <code>
-if tag != "text":
+if tag != "doc":
     ## for numerical columns, replace the missing values by mean
     train_df[num_cols] = train_df[num_cols].fillna(train_df[num_cols].mean())
     test_df[num_cols] = test_df[num_cols].fillna(test_df[num_cols].mean())
@@ -45,16 +45,14 @@ if tag != "text":
 
 
 <text>
-### 3.3 Feature Engineering 
+### 3.3 Feature Engineering (only for text fields)
 
 In this section, we will create relevant features which can be used in the modelling
 </text>
 
 
-
-
 <code>
-if tag == "text":
+if tag == "doc":
     tfidf = TfidfVectorizer(min_df=3,  max_features=None, analyzer='word', 
                         token_pattern=r'\w{1,}', stop_words = 'english')
     tfidf.fit(list(train_df[textcol].values))
@@ -72,11 +70,6 @@ else:
 
 Create the training and validation sets for training the model and validating it
 </text>
-
-
-
-
-
 
 <code>
 X_train, X_valid, y_train, y_valid = train_test_split(xtrain, Y, test_size=0.20, random_state=2018)

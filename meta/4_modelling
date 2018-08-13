@@ -13,26 +13,31 @@ model = LogisticRegression()
 model.fit(X_train, y_train)
 valp = model.predict(X_valid)
 pred = model.predict(xtest)
-</code>
 
-<code>
-auc = roc_auc_score(y_valid, valp)
-print('AUC:', auc)
+def generate_auc(y_valid, valp):
+    auc = roc_auc_score(y_valid, valp)
+    print('AUC:', auc)
 
-fpr, tpr, thresholds = roc_curve(y_valid, valp)
-roc_auc = metrics.auc(fpr, tpr)
+    fpr, tpr, thresholds = roc_curve(y_valid, valp)
+    roc_auc = metrics.auc(fpr, tpr)
 
-plt.figure(figsize=(6,5))
-plt.title('Receiver Operating Characteristic for different ML algorithms')
-plt.plot(fpr, tpr, 'b', label = 'LGBM-AUC = %0.2f' % roc_auc)
-plt.legend(loc = 'upper left')
-plt.plot([0, 1], [0, 1],'r--')
-plt.xlim([0, 1])
-plt.ylim([0, 1])
+    plt.figure(figsize=(6,5))
+    plt.title('Receiver Operating Characteristic for different ML algorithms')
+    plt.plot(fpr, tpr, 'b', label = 'LGBM-AUC = %0.2f' % roc_auc)
+    plt.legend(loc = 'upper left')
+    plt.plot([0, 1], [0, 1],'r--')
+    plt.xlim([0, 1])
+    plt.ylim([0, 1])
 
-plt.ylabel('True Positive Rate')
-plt.xlabel('False Positive Rate')
-plt.show()
+    plt.ylabel('True Positive Rate')
+    plt.xlabel('False Positive Rate')
+    plt.show()
+
+## will only plot auc roc if the target is binary
+try:
+    generate_auc(y_valid,valp)
+except:
+    pass
 </code>
 
 
@@ -79,32 +84,15 @@ model = RandomForestClassifier()
 model.fit(X_train, y_train)
 valp = model.predict(X_valid)
 pred = model.predict(xtest)
+
+## will only plot auc roc if the target is binary
+try:
+    generate_auc(y_valid,valp)
+except:
+    pass
+
 </code>
 
-
-
-
-
-
-<code>
-auc = roc_auc_score(y_valid, valp)
-print('AUC:', auc)
-
-fpr, tpr, thresholds = roc_curve(y_valid, valp)
-roc_auc = metrics.auc(fpr, tpr)
-
-plt.figure(figsize=(6,5))
-plt.title('Receiver Operating Characteristic for different ML algorithms')
-plt.plot(fpr, tpr, 'b', label = 'LGBM-AUC = %0.2f' % roc_auc)
-plt.legend(loc = 'upper left')
-plt.plot([0, 1], [0, 1],'r--')
-plt.xlim([0, 1])
-plt.ylim([0, 1])
-
-plt.ylabel('True Positive Rate')
-plt.xlabel('False Positive Rate')
-plt.show()
-</code>
 
 
 <code>
@@ -123,38 +111,20 @@ plt.show();
 Lets train the extereme gradient boosting : xgboost classifier
 </text>
 
-
-
-
-
-
-
-
 <code>
 model = xgb.XGBClassifier(n_estimators=300, learning_rate=0.01)
 model.fit(X_train, y_train)
 valp = model.predict(X_valid)
 pred = model.predict(xtest)
+
+## will only plot auc roc if the target is binary
+try:
+    generate_auc(y_valid,valp)
+except:
+    pass
+
 </code>
-<code>
-auc = roc_auc_score(y_valid, valp)
-print('AUC:', auc)
 
-fpr, tpr, thresholds = roc_curve(y_valid, valp)
-roc_auc = metrics.auc(fpr, tpr)
-
-plt.figure(figsize=(6,5))
-plt.title('Receiver Operating Characteristic for different ML algorithms')
-plt.plot(fpr, tpr, 'b', label = 'LGBM-AUC = %0.2f' % roc_auc)
-plt.legend(loc = 'upper left')
-plt.plot([0, 1], [0, 1],'r--')
-plt.xlim([0, 1])
-plt.ylim([0, 1])
-
-plt.ylabel('True Positive Rate')
-plt.xlabel('False Positive Rate')
-plt.show()
-</code>
 
 <code>
 cnf_matrix = confusion_matrix(y_valid, valp)

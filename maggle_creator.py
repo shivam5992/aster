@@ -20,33 +20,54 @@ class maggle():
 		self.config = config
 		self.meta_path = "Meta/"
 
-	def _prepare_meta(self):
-		pass
+	def _prepare_meta(self, filename):
+		content = open(self.meta_path+filename).read()
+		for key,value in self.config.items():
+			if key.startswith("_"):
+				content = content.replace("<"+key+">", value)
+		return content
 
 	def _prepare(self):
 		for x in sorted(os.listdir(self.meta_path)):
 			if x.startswith("."):
 				continue
 
+
 			txt = ""
 			cod = ""
-			content = open(self.meta_path+x).read()
+			content = self._prepare_meta(x)
 			for j, line in enumerate(content.split("\n")):
 
-				if line == "<text>":
+				if line.startswith("<text>"):
 					txt = ""
-				if line == "<code>":
+				if line.startswith("<code>"):
 					cod = ""
 
-				if line == "</text>":
-					txt = txt.replace("<text>","").replace("</text>","").strip()
-					self.nb['cells'].append(nbformat.v4.new_markdown_cell(txt))
-					txt = ""
+				if line.startswith("</text>"):
+					valid = True
+					if line.startswith("</text><num>") and self.config["_TAG"] != "num":
+						valid = False
+					if line.startswith("</text><doc>") and self.config["_TAG"] != "doc":
+						valid = False
 
-				if line == "</code>":
-					cod = cod.replace("<code>","").replace("</code>","").strip()
-					self.nb['cells'].append(nbformat.v4.new_code_cell(cod))
-					cod = ""
+					if valid:
+						txt = txt.replace("<text>","").replace("</text>","").strip()
+						txt = txt.replace("<num>","").replace("</doc>","").strip()
+						self.nb['cells'].append(nbformat.v4.new_markdown_cell(txt))
+						txt = ""
+
+				if line.startswith("</code>"):
+					valid = True
+					if line.startswith("</code><num>") and self.config["_TAG"] != "num":
+						valid = False
+					if line.startswith("</code><doc>") and self.config["_TAG"] != "doc":
+						valid = False
+
+					if valid:
+						cod = cod.replace("<code>","").replace("</code>","").strip()
+						cod = cod.replace("<doc>","").replace("</doc>","").strip()
+						self.nb['cells'].append(nbformat.v4.new_code_cell(cod))
+						cod = ""
 
 				txt += "\n"
 				cod += "\n"
@@ -55,3 +76,15 @@ class maggle():
 				cod += line 
 
 		nbformat.write(self.nb, "baseline_kernel.ipynb")
+
+
+config = {"_TAG" : "num", "_TRAIN_FILE" : "train", "_TEST_FILE" : "test",
+		  "_TARGET_COL" : "Survived", "_TEXT_COL" :  "text", "_ID_COL" : "PassengerId"}
+mg = maggle(config)
+mg._prepare()
+
+
+
+
+
+

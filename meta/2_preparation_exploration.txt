@@ -5,16 +5,14 @@ Load the train and test dataset into memory
 
 <code>
 ## read dataset
-train_df = pd.read_csv('../input/train 2.csv')
-test_df = pd.read_csv("../input/test 2.csv")
+train_df = pd.read_csv('../input/<_TRAIN_FILE>.csv')
+test_df = pd.read_csv("../input/<_TEST_FILE>.csv")
 
 ## get predictor and target variables
-_target = "Survived"
-_id = "PassengerId" 
-
-_target = "author"
-_id = "id" 
-tag = "text"
+_target = "<_TARGET_COL>"
+textcol = "<_TEXT_COL>"
+_id = "<_ID_COL>" 
+tag = "<_TAG>"
 
 Y = train_df[_target]
 distinct_Y = Y.value_counts().index
@@ -23,8 +21,6 @@ test_id = test_df[_id]
 ## drop the target and id columns
 train_df = train_df.drop([_target, _id], axis=1)
 test_df = test_df.drop([_id], axis=1)
-
-textcol = "text"
 </code>
 
 <text>
@@ -39,9 +35,8 @@ train_df.head()
 
 <code>
 ## summary of train and test
-# if tag != "text":
 train_df.describe()
-</code>
+</code><num>
 
 
 <text>
@@ -79,10 +74,10 @@ ax.set_ylabel('Number of Columns');
 </code>
 
 <text>
-### 2.4 Variable Correlations 
+### 2.4 Variable Correlations (Only Numerical Fields)
 
 Lets plot the correlations among the variables
-</text>
+</text><num>
 
 <code>
 corr = train_df.corr()
@@ -94,4 +89,4 @@ f, ax = plt.subplots(figsize=(11, 9))
 cmap = sns.diverging_palette(220, 10, as_cmap=True)
 sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0, 
             square=True, linewidths=.5, cbar_kws={"shrink": .5});
-</code>
+</code><num>
