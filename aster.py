@@ -89,7 +89,8 @@ mg = maggle(config)
 mg._prepare()
 
 
-
+## todo - kernels api integration
+## create readme
 
 
 
