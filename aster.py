@@ -1,6 +1,6 @@
 """
 
-Maggle : a kaggle bot to create baseline models for different category of kaggle competitions or datasets
+Aster : a kaggle bot to create baseline kernels for different category of kaggle competitions or datasets
 
 __author__ == "shivam bansal"
 __email__ == "shivam5992@gmail.com"
@@ -8,22 +8,44 @@ __email__ == "shivam5992@gmail.com"
 """
 
 
-""" make necessary imports """
+## necessary imports
+import subprocess
 import nbformat 
+import json
 import os
 
-class maggle():
+class Aster():
 
 	## initialize the notebook parameters
 	def __init__(self, config):
 		self.nb = nbformat.v4.new_notebook()
 		self.nb['cells'] = []
 		self.config = config
-		self.meta_path = "Meta/"
+		self.content_meta = "Meta/"
+		self.kernel_meta = {"id": self.config["KERNEL_ID"], "title" : "Bot Generated Baseline Kernel", 
+		"kernel_sources": [], "code_file": "baseline_kernel.ipynb", "language": "python", 
+		"kernel_type": "notebook", "is_private": "false", "enable_gpu": "false", "enable_internet": "false"}
+
+		## add the dataset sources 
+		if self.config["DATASET"] != "":
+			self.kernel_meta["dataset_sources"] = [self.config["DATASET"]]
+
+		## add the competition sources
+		if self.config["COMPETITION"] != "":
+			self.kernel_meta["competition_sources"] = [self.config["COMPETITION"]]
+
+		## create the folder for the kernel
+		self.kernel_folder = "BaselineKernel"
+		if not os.path.isdir(self.kernel_folder):
+			os.makedirs(self.kernel_folder)
+
+		## write the kernel-metadata.json
+		fout = open(self.kernel_folder + "/kernel-metadata.json", "w")
+		fout.write(json.dumps(self.kernel_meta))
 
 	## function to prepare and modify the base content
 	def _prepare_meta(self, filename):
-		content = open(self.meta_path+filename).read()
+		content = open(self.content_meta+filename).read()
 		for key,value in self.config.items():
 			if key.startswith("_"):
 				content = content.replace("<"+key+">", value)
@@ -47,7 +69,7 @@ class maggle():
 
 	## function to generate a new kernel
 	def _prepare(self):
-		for x in sorted(os.listdir(self.meta_path)):
+		for x in sorted(os.listdir(self.content_meta)):
 			if x.startswith("."):
 				continue
 
@@ -76,21 +98,30 @@ class maggle():
 				cod += "\n"
 				cod += line 
 
-		nbformat.write(self.nb, "baseline_kernel.ipynb")
+		nbformat.write(self.nb, self.kernel_folder + "/baseline_kernel.ipynb")
+		print ("Generated")
+		return None 
 
+	## function to push the generated kernel on kaggle
+	def _push(self):
+		command = "kaggle kernels push -p "+self.kernel_folder 
+		subprocess.call(command.split())
+		print ("Pushed")
+		return None
 
-config = {	"_TAG" : "doc", 
-			"_TRAIN_FILE" : "train 2", 
-			"_TEST_FILE" : "test 2",
-		  	"_TARGET_COL" : "author", 
-		  	"_TEXT_COL" :  "text", 
-		  	"_ID_COL" : "id"}
-mg = maggle(config)
-mg._prepare()
+config = {	"_TAG" : "num", 
+			"_TEXT_COL" :  "text", 
+		  	"_TARGET_COL" : "Survived", 
+		  	"_ID_COL" : "PassengerId",
+		  	"COMPETITION" : "titanic",
 
+		  	"DATASET": "",
+		  	"_TRAIN_FILE" : "train", 
+			"_TEST_FILE" : "test",
+		  	"KERNEL_ID" : "shivamb/bot_generated_kernel",
+		  	}
+ast = Aster(config)
+ast._prepare()
+ast._push()
 
-## todo - kernels api integration
 ## create readme
-
-
-
