@@ -2,3 +2,4 @@
 *checkpoints*
 .ipynb_checkpoints/
 *.DS_*
+input/

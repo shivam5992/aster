@@ -7,8 +7,6 @@ __email__ == "shivam5992@gmail.com"
 
 """
 
-
-## necessary imports
 import subprocess
 import nbformat 
 import json
@@ -109,19 +107,47 @@ class Aster():
 		print ("Pushed")
 		return None
 
+## add default values 
 config = {	"_TAG" : "num", 
 			"_TEXT_COL" :  "text", 
-		  	"_TARGET_COL" : "Survived", 
-		  	"_ID_COL" : "PassengerId",
-		  	"COMPETITION" : "titanic",
+		  	"_TARGET_COL" : "Outcome", 
+		  	"_ID_COL" : "",
 
+		  	"_TRAIN_FILE" : "diabetes", 
+			"_TEST_FILE" : "",
+		  	"COMPETITION" : "",
 		  	"DATASET": "",
-		  	"_TRAIN_FILE" : "train", 
-			"_TEST_FILE" : "test",
 		  	"KERNEL_ID" : "shivamb/bot_generated_kernel",
 		  	}
 ast = Aster(config)
 ast._prepare()
-ast._push()
+# ast._push()
 
-## create readme
+
+
+
+### readme -- 29 onwards 
+### adding defaults -- 29 onwards
+
+### text kernel
+### -- add some cool things 
+
+### regression 
+### -- add some cool things
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

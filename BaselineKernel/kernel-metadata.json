@@ -1,1 +1,1 @@
-{"id": "shivamb/shivam_test_kernel_aug_14", "title": "Bot Generated Baseline Kernel", "kernel_sources": [], "code_file": "baseline_kernel.ipynb", "language": "python", "kernel_type": "notebook", "is_private": "false", "enable_gpu": "false", "enable_internet": "false", "competition_sources": ["titanic"]}
+{"id": "shivamb/bot_generated_kernel", "title": "Bot Generated Baseline Kernel", "kernel_sources": [], "code_file": "baseline_kernel.ipynb", "language": "python", "kernel_type": "notebook", "is_private": "false", "enable_gpu": "false", "enable_internet": "false"}

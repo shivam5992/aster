@@ -147,7 +147,22 @@ plot_importance(model, max_num_features=10);
 </code>
 
 <text>
-## Step 6 : Create Submission File
+## Step 6 : Ensembling 
+
+Lets create a simple stacking model
+</text>
+
+<code>
+
+
+
+</code>
+
+
+
+
+<text>
+## Step 7 : Create Submission File
 
 Finally, create the submission file from the extereme graident boosting model
 </text>
