@@ -4,6 +4,7 @@ Aster : a kaggle bot to create baseline kernels for different category of kaggle
 
 __author__ == "shivam bansal"
 __email__ == "shivam5992@gmail.com"
+__kaggle__ == "https://www.kaggle.com/shivamb"
 
 """
 
@@ -22,7 +23,8 @@ class Aster():
 		self.content_meta = "Meta/"
 		self.kernel_meta = {"id": self.config["KERNEL_ID"], "title" : "Bot Generated Baseline Kernel", 
 		"kernel_sources": [], "code_file": "baseline_kernel.ipynb", "language": "python", 
-		"kernel_type": "notebook", "is_private": "false", "enable_gpu": "false", "enable_internet": "false"}
+		"kernel_type": "notebook", "is_private": "true", "enable_gpu": "false", "enable_internet": "false", 
+		"dataset_sources" : [], "competition_sources" : []}
 
 		## add the dataset sources 
 		if self.config["DATASET"] != "":
@@ -108,14 +110,14 @@ class Aster():
 		return None
 
 ## add default values 
-config = {	"_TAG" : "num", 
+config = {	"_TAG" : "doc", 
 			"_TEXT_COL" :  "text", 
-		  	"_TARGET_COL" : "Outcome", 
-		  	"_ID_COL" : "",
+		  	"_TARGET_COL" : "author", 
+		  	"_ID_COL" : "id",
 
-		  	"_TRAIN_FILE" : "diabetes", 
-			"_TEST_FILE" : "",
-		  	"COMPETITION" : "",
+		  	"_TRAIN_FILE" : "train 2", 
+			"_TEST_FILE" : "test 2",
+		  	"COMPETITION" : "spooky-author-identification",
 		  	"DATASET": "",
 		  	"KERNEL_ID" : "shivamb/bot_generated_kernel",
 		  	}
@@ -128,15 +130,18 @@ ast._prepare()
 
 ### readme -- 29 onwards 
 ### adding defaults -- 29 onwards
+### add stacking 
 
 ### text kernel
-### -- add some cool things 
+### text based feature engineering 
+### topic modelling 
+### word cloud 
 
 ### regression 
 ### -- add some cool things
 
 
-
+### neural networks for image classifiication
 
 
 
