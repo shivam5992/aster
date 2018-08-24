@@ -8,31 +8,34 @@ __kaggle__ == "https://www.kaggle.com/shivamb"
 
 """
 
-import subprocess
-import nbformat 
-import json
-import os
+import subprocess, nbformat , json, os
 
-class Aster():
+class aster():
 
 	## initialize the notebook parameters
 	def __init__(self, config):
 		self.nb = nbformat.v4.new_notebook()
 		self.nb['cells'] = []
 		self.config = config
-		self.content_meta = "Meta/"
-		self.kernel_meta = {"id": self.config["KERNEL_ID"], "title" : "Bot Generated Baseline Kernel", 
+		self.content_meta = "aster/templates/"
+		self.kernel_meta = {"id": "shivamb/bot_generated_kernel_"+, "title" : "Bot Generated Baseline Kernel", 
 		"kernel_sources": [], "code_file": "baseline_kernel.ipynb", "language": "python", 
 		"kernel_type": "notebook", "is_private": "true", "enable_gpu": "false", "enable_internet": "false", 
 		"dataset_sources" : [], "competition_sources" : []}
 
-		## add the dataset sources 
+		## setup default values for configs
 		if self.config["DATASET"] != "":
 			self.kernel_meta["dataset_sources"] = [self.config["DATASET"]]
-
-		## add the competition sources
 		if self.config["COMPETITION"] != "":
 			self.kernel_meta["competition_sources"] = [self.config["COMPETITION"]]
+		if "_TRAIN_FILE" not in self.config:
+			self.config["_TRAIN_FILE"] = "train"
+		if "_TEST_FILE" not in self.config:
+			self.config["_TEST_FILE"] = "test"
+		if "_TAG" not in self.config:
+			self.config["_TAG"] = "num"
+		if "_TEXT_COL" not in self.config:
+			self.config["_TEXT_COL"] = ""
 
 		## create the folder for the kernel
 		self.kernel_folder = "BaselineKernel"
@@ -67,18 +70,23 @@ class Aster():
 			valid = False
 		return valid
 
+	## function to push the generated kernel on kaggle
+	def _push(self):
+		command = "kaggle kernels push -p "+self.kernel_folder 
+		subprocess.call(command.split())
+		print ("Pushed")
+		return None
+
 	## function to generate a new kernel
 	def _prepare(self):
 		for x in sorted(os.listdir(self.content_meta)):
 			if x.startswith("."):
 				continue
 
-			txt = ""
-			cod = ""
+			txt, cod = "", ""
 			content = self._prepare_meta(x)
 			for j, line in enumerate(content.split("\n")):
-				
-				## add markdown cells
+				## parse and append markdown cells
 				if line.startswith("<text>"):
 					txt = ""
 				if line.startswith("</text>") and self.is_valid_cell(line, "</text>"):
@@ -87,8 +95,7 @@ class Aster():
 					txt = ""
 				txt += "\n"
 				txt += line 
-
-				## add code cells
+				## parse and append code cells
 				if line.startswith("<code>"):
 					cod = ""
 				if line.startswith("</code>") and self.is_valid_cell(line, "</code>"):
@@ -101,58 +108,3 @@ class Aster():
 		nbformat.write(self.nb, self.kernel_folder + "/baseline_kernel.ipynb")
 		print ("Generated")
 		return None 
-
-	## function to push the generated kernel on kaggle
-	def _push(self):
-		command = "kaggle kernels push -p "+self.kernel_folder 
-		subprocess.call(command.split())
-		print ("Pushed")
-		return None
-
-## add default values 
-config = {	"_TAG" : "doc", 
-			"_TEXT_COL" :  "text", 
-		  	"_TARGET_COL" : "author", 
-		  	"_ID_COL" : "id",
-
-		  	"_TRAIN_FILE" : "train 2", 
-			"_TEST_FILE" : "test 2",
-		  	"COMPETITION" : "spooky-author-identification",
-		  	"DATASET": "",
-		  	"KERNEL_ID" : "shivamb/bot_generated_kernel",
-		  	}
-ast = Aster(config)
-ast._prepare()
-# ast._push()
-
-
-
-
-### readme -- 29 onwards 
-### adding defaults -- 29 onwards
-### add stacking 
-
-### text kernel
-### text based feature engineering 
-### topic modelling 
-### word cloud 
-
-### regression 
-### -- add some cool things
-
-
-### neural networks for image classifiication
-
-
-
-
-
-
-
-
-
-
-
-
-
-
