@@ -10,6 +10,10 @@ Aster is a python based bot (or a module), which is capabale of writing baseline
 5. Changes the visuals according to data, for example - generates word clouds for text data and pairplots for numerical datasets
 6. Uses a config to create new kernels  
 
+### How Aster Works  
+
+Aster first understands the inputs given in the config by the user and the types of columns present in the dataset.  According to this information, aster dynamically chooses the most relevant code / text templates and appends them to the baseline kernel. For example, if the dataset is belongs to text classification category, then aster will generate some wordclouds, will not perform correlation charts, pair plots or categorical variable distributions. While if the dataset is non text classification type, then aster will choose the most relevant templates, for example - distribution of categorical variables, missing value treatments etc.  
+
 ### Detailed table of contents  
 
 Aster creates following contents based on the type of data.
@@ -90,9 +94,12 @@ cd textstat
 python setup.py install
 ```
 
-### More work to do 
+### Future Work
 
-- Automated Feature Engineering
-- Regression Problems - Numerical Data 
-- Image Classifiication
-- Hyperparameter Tuning 
+- Dynamic Code Selection Improvements. 
+- Add More Content 
+&nbsp;&nbsp;&nbsp;&nbsp;- Automated Feature Engineering
+&nbsp;&nbsp;&nbsp;&nbsp;- Hyperparameter Tuning 
+- Extend Datatypes  
+&nbsp;&nbsp;&nbsp;&nbsp;- Regression Problems - Numerical Data 
+&nbsp;&nbsp;&nbsp;&nbsp;- Image Classifiication
