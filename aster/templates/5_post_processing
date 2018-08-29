@@ -18,7 +18,7 @@ Lets create a simple blender. Other options to extend are stacking / majority vo
 <code>
 models = [model1, model2, model3, model4, model5]
 preds = np.zeros(shape=(xtest.shape[0],))
-if len(xtest) == 0:
+if xtest.shape[0] == 0:
     print ("this is a dataset kernel, no test data for predictions")
 else:
     for model in models:
@@ -34,7 +34,7 @@ Finally, create the submission file from the extereme graident boosting model
 </text>
 
 <code>
-if len(xtest) == 0:
+if xtest.shape[0] == 0:
     print ("This is a dataset kernel, no need to create a submission file :)")
 else:
     pred = model5.predict(xtest)
