@@ -12,7 +12,7 @@ Aster is a python based bot (or a module), which is capabale of writing baseline
 
 ### How Aster Works  
 
-Aster first understands the inputs given in the config by the user and the types of columns present in the dataset.  According to this information, aster dynamically chooses the most relevant code / text templates and appends them to the baseline kernel. For example, if the dataset is belongs to text classification category, then aster will generate some wordclouds, will not perform correlation charts, pair plots or categorical variable distributions. While if the dataset is non text classification type, then aster will choose the most relevant templates, for example - distribution of categorical variables, missing value treatments etc.  
+Aster first understands the inputs given in the config by the user and the types of columns present in the dataset.  According to this information, aster dynamically chooses the most relevant code / text templates and appends them to the baseline kernel. For example, if the dataset belongs to text classification category, then aster will generate some wordclouds and will not perform correlation charts, pair plots or categorical variable distributions. While if the dataset is a non-text classification type, then aster will choose the most relevant template, for example - distribution of categorical variables, missing value treatments etc.  
 
 ### Detailed table of contents  
 
@@ -38,13 +38,13 @@ Aster creates following contents based on the type of data.
 &nbsp;&nbsp;&nbsp;&nbsp; 4.2 Decision Tree    
 &nbsp;&nbsp;&nbsp;&nbsp; 4.3 Random Forest  
 &nbsp;&nbsp;&nbsp;&nbsp; 4.4 ExtraTrees Classifier  
-&nbsp;&nbsp;&nbsp;&nbsp; 4.5 Extereme Gradient Boosting  
+&nbsp;&nbsp;&nbsp;&nbsp; 4.5 Extreme Gradient Boosting  
 5. Feature Importance   
 6. Model Ensembling  
 &nbsp;&nbsp;&nbsp;&nbsp; 6.1 A simple Blender  
 7. Creating Submission
 
-### Useage : example 1
+### Usage : example 1
 
 ```python
 from aster.aster import aster
@@ -58,7 +58,7 @@ ast._prepare() # prepare the kernel
 ast._push() # push the kernel on kaggle
 ```
 
-### Useage : example 2
+### Usage : example 2
 
 ```python
 from aster.aster import aster
