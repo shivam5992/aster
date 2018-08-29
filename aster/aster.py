@@ -8,7 +8,10 @@ __kaggle__ == "https://www.kaggle.com/shivamb"
 
 """
 
-import subprocess, nbformat, json, os, time
+import subprocess
+import nbformat
+import json, os
+import random
 
 class aster():
 
@@ -18,8 +21,8 @@ class aster():
 		self.nb['cells'] = []
 		self.config = config
 		self.content_meta = "aster/templates/"
-
-		self.kernel_meta = {"id": "shivamb/bot_generated_kernel_"+time, "title" : "Bot Generated Baseline Kernel", 
+		self.hash = random.getrandbits(128)
+		self.kernel_meta = {"id": "shivamb/bot_generated_kernel_"+str(self.hash), "title" : "Bot Generated Baseline Kernel", 
 		"kernel_sources": [], "code_file": "baseline_kernel.ipynb", "language": "python", 
 		"kernel_type": "notebook", "is_private": "true", "enable_gpu": "false", "enable_internet": "false", 
 		"dataset_sources" : [], "competition_sources" : []}
