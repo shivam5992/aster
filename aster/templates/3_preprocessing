@@ -4,21 +4,32 @@
 In the data preprocessing step, we will perform label encoding of categorical variables and handle missing values.
 
 ### 3.1 Label Encoding
-In this step, convert the categorical variables into label encoded forms 
+In this step, convert the categorical variables into label encoded forms
 </text>
 
 <code>
-if tag != "doc":
-    columns = train_df.columns
-    num_cols = train_df._get_numeric_data().columns
-    cat_cols = list(set(columns) - set(num_cols))
-
+columns = train_df.columns
+num_cols = train_df._get_numeric_data().columns
+cat_cols = list(set(columns) - set(num_cols))
+    
+if tag == "doc":
+    print ("No columns available for label encoding")
+elif len(cat_cols) > 0:
     for col in cat_cols: 
         le = LabelEncoder()
-        le.fit(list(train_df[col].values) + list(test_df[col].values))
+        
+        if col in list(test_df.columns):
+            le.fit(list(train_df[col].values) + list(test_df[col].values))
+        else:
+            le.fit(list(train_df[col].values))
+        
         train_df[col] = le.transform(list(train_df[col].values))
-        test_df[col] = le.transform(list(test_df[col].values))
-
+        try:
+            test_df[col] = le.transform(list(test_df[col].values))
+        except:
+            pass
+        
+## label encode the target variable (if object type)
 if Y.dtype.name == "object":
     le = LabelEncoder()
     Y = le.fit_transform(Y.values)
@@ -32,14 +43,25 @@ Handle the missing values, for continuous variables, replace by mean. For catego
 </text>
 
 <code>
-if tag != "doc":
+if tag == "doc":
+    train_df[textcol] = train_df[textcol].fillna("")
+    if textcol in test_df:
+        test_df[textcol] = test_df[textcol].fillna("")
+else:
     ## for numerical columns, replace the missing values by mean
     train_df[num_cols] = train_df[num_cols].fillna(train_df[num_cols].mean())
-    test_df[num_cols] = test_df[num_cols].fillna(test_df[num_cols].mean())
-
+    try:
+        test_df[num_cols] = test_df[num_cols].fillna(test_df[num_cols].mean())
+    except:
+        pass 
+    
     ## for categorical columns, replace the missing values by mode
-    train_df[cat_cols] = train_df[cat_cols].fillna(train_df[cat_cols].mode())
-    test_df[cat_cols] = test_df[cat_cols].fillna(test_df[cat_cols].mode())
+    train_df[cat_cols] = train_df[cat_cols].fillna(train_df[cat_cols].mode())    
+    try:
+        test_df[cat_cols] = test_df[cat_cols].fillna(test_df[cat_cols].mode())
+    except:
+        pass
+print ("Treated missing values in the dataset")
 </code>
 
 
@@ -48,19 +70,40 @@ if tag != "doc":
 ### 3.3 Feature Engineering (only for text fields)
 
 In this section, we will create relevant features which can be used in the modelling
+
+#### 3.3.1 Tf IDF features
 </text>
 
 
 <code>
 if tag == "doc":
     tfidf = TfidfVectorizer(min_df=3,  max_features=None, analyzer='word', 
-                        token_pattern=r'\w{1,}', stop_words = 'english')
+                            token_pattern=r'\w{1,}', stop_words = 'english')
     tfidf.fit(list(train_df[textcol].values))
-    xtrain =  tfidf.transform(train_df[textcol].values) 
-    xtest =  tfidf.transform(test_df[textcol].values)
+    xtrain = tfidf.transform(train_df[textcol].values) 
+    if textcol in test_df.columns:
+        xtest = tfidf.transform(test_df[textcol].values)
 else:
     xtrain = train_df
     xtest = test_df
+</code>
+
+<code>
+if tag != "doc":
+    print ("Lets plot the dataset distributions after preprocessing step ... ")
+    ## pair plots
+    sns.pairplot(train_df, palette="cool")
+    
+    ## distributions
+    columns=train_df.columns
+    plt.subplots(figsize=(18,15))
+    length=len(columns)
+    for i,j in itertools.zip_longest(columns,range(length)):
+        plt.subplot((length/2),3,j+1)
+        plt.subplots_adjust(wspace=0.2,hspace=0.5)
+        train_df[i].hist(bins=20, edgecolor='white')
+        plt.title(i)
+    plt.show()
 </code>
 
 
@@ -77,9 +120,17 @@ X_train, X_valid, y_train, y_valid = train_test_split(xtrain, Y, test_size=0.20,
 
 
 
+<text>
+### 3.4 Train and Validation sets split
+
+Create the training and validation sets for training the model and validating it
+</text>
 
 
 
+<code>
+X_train, X_valid, y_train, y_valid = train_test_split(xtrain, Y, test_size=0.20, random_state=2018)
+</code>
 
 
 

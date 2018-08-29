@@ -1,0 +1,168 @@
+<text>
+## Step 2: Quick Exploration
+In the next step, lets load the dataset into my memory and perform a quick exploratory analysis 
+
+### 2.1 Dataset Preparation
+</text>
+
+<code>
+## read dataset
+train_path = "../input/<_TRAIN_FILE>.csv"
+train_df = pd.read_csv(train_path)
+train_copy = train_df.copy()
+
+test_path = "../input/<_TEST_FILE>.csv"
+test_df = pd.DataFrame()
+if os.path.exists(test_path):
+    test_df = pd.read_csv(test_path)
+
+print ("dataset loaded")
+</code>
+
+<code>
+## separate predictors and target variables
+_target = "<_TARGET_COL>"
+Y = train_df[_target]
+distinct_Y = Y.value_counts().index
+
+## separate the id column
+_id = "<_ID_COL>"
+if _id == "": ## if id is not present, create a dummy 
+    _id = "id"
+    train_df[_id] = 1
+    test_df[_id] = 1
+if _id not in list(test_df.columns):
+    test_df[_id] = 1
+    
+## drop the target and id columns
+train_df = train_df.drop([_target, _id], axis=1)
+test_id = test_df[_id]
+test_df = test_df.drop([_id], axis=1)
+</code>
+
+<code>
+## flag variables (used by bot to write the relevant code)
+textcol = "<_TEXT_COL>"
+tag = "<_TAG>"
+</code>
+
+<text>
+### 2.2 Dataset snapshot and summary
+
+Lets look at the dataset snapshot and the summary
+</text>
+
+<code>
+## snapshot of train and test
+train_df.head()
+</code>
+
+
+<code>
+## summary of train and test
+train_df.describe()
+</code><num>
+
+
+<text>
+### 2.3 Target variable distribution
+
+Lets plot the distribution of target variable
+</text>
+
+<code>
+tar_dist = dict(Counter(Y.values))
+
+xx = list(tar_dist.keys())
+yy = list(tar_dist.values())
+
+plt.figure(figsize=(5,3))
+sns.set(style="whitegrid")
+ax = sns.barplot(x=xx, y=yy, palette="rocket")
+ax.set_title('Distribution of Target')
+ax.set_ylabel('count');
+ax.set_xlabel(_target);
+</code>
+
+<text>
+lets generate some plots related to dataset
+</text>
+
+
+<code>
+if tag == "doc":
+    txts = []
+    for i, y in enumerate(distinct_Y):
+        txt = " ".join(train_copy[train_copy[_target] == y]["text"]).lower()
+        txts.append(txt)
+
+    for j, text in enumerate(txts):
+        wc = WordCloud(background_color="black", max_words=2000, stopwords=STOPWORDS)
+        wc.generate(text)
+        plt.figure(figsize=(9,8))
+        plt.axis("off")
+        plt.title("Most frequent words - " + distinct_Y[j], fontsize=20)
+        plt.imshow(wc.recolor(colormap= 'cool' , random_state=17), alpha=0.95)
+        plt.show()
+</code>
+
+<text>
+### 2.4 Missing Value Counts 
+
+Lets check the count of missing values in the datasets 
+</text>
+
+<code>
+mcount = train_df.isna().sum() 
+xx = mcount.index 
+yy = mcount.values
+
+missing_cols = 0
+for each in yy:
+    if each > 0:
+        missing_cols += 1
+print ("there are " + str(missing_cols) + " columns in the dataset having missing values")
+
+if missing_cols > 0:
+    plt.figure(figsize=(12,5))
+    sns.set(style="whitegrid")
+    ax = sns.barplot(x=xx, y=yy, palette="gist_rainbow")
+    ax.set_title('Number of Missing Values')
+    ax.set_ylabel('Number of Columns');
+</code>
+
+<text>
+### 2.5 Variable Types
+
+Lets count the number of numerical and categorical columns in the dataset
+</text>
+
+
+<code>
+## find categorical columns in the dataset 
+num_cols = train_df._get_numeric_data().columns
+cat_cols = list(set(train_df.columns) - set(num_cols))
+
+print ("There are " + str(len(num_cols)) + " numerical columns in the dataset")
+print ("There are " + str(len(cat_cols)) + " object type columns in the dataset")
+</code>
+
+<text>
+### 2.6 Variable Correlations (Only Numerical Fields)
+
+Lets plot the correlations among the variables. The generated graph can give an idea about features which are highly, moderately or least correlated with one another.  
+</text>
+
+
+<code>
+get_corr = False
+corr = train_df.corr()
+if len(corr) > 0:
+    get_corr = True
+    colormap = plt.cm.BrBG
+    plt.figure(figsize=(10,10));
+    plt.title('Pearson Correlation of Features', y=1.05, size=15);
+    sns.heatmap(corr, linewidths=0.1,vmax=1.0, square=True, cmap=colormap, linecolor='white', annot=True);
+else:
+    print ("No variables available for correlation")
+</code>

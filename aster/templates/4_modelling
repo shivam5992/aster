@@ -9,21 +9,20 @@ Train a binary classifier logistic regression
 </text>
 
 <code>
-model = LogisticRegression()
-model.fit(X_train, y_train)
-valp = model.predict(X_valid)
-pred = model.predict(xtest)
+model1 = LogisticRegression()
+model1.fit(X_train, y_train)
+valp = model1.predict(X_valid)
 
-def generate_auc(y_valid, valp):
-    auc = roc_auc_score(y_valid, valp)
-    print('AUC:', auc)
+def generate_auc(y_valid, valp, model_name):
+    auc_scr = roc_auc_score(y_valid, valp)
+    print('The AUC for ' +model_name+ ' is :', auc_scr)
 
     fpr, tpr, thresholds = roc_curve(y_valid, valp)
-    roc_auc = metrics.auc(fpr, tpr)
+    roc_auc = auc(fpr, tpr)
 
     plt.figure(figsize=(6,5))
-    plt.title('Receiver Operating Characteristic for different ML algorithms')
-    plt.plot(fpr, tpr, 'b', label = 'LGBM-AUC = %0.2f' % roc_auc)
+    plt.title('Receiver Operating Characteristic')
+    plt.plot(fpr, tpr, 'purple', label = 'AUC = %0.2f' % roc_auc)
     plt.legend(loc = 'upper left')
     plt.plot([0, 1], [0, 1],'r--')
     plt.xlim([0, 1])
@@ -33,11 +32,8 @@ def generate_auc(y_valid, valp):
     plt.xlabel('False Positive Rate')
     plt.show()
 
-## will only plot auc roc if the target is binary
-try:
-    generate_auc(y_valid,valp)
-except:
-    pass
+if len(distinct_Y) == 2:
+    generate_auc(y_valid, valp, model_name="logistic regression")
 </code>
 
 
@@ -46,13 +42,15 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-    plt.figure(figsize=(6,5))
+    plt.figure(figsize=(6,5));
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, rotation=45)
     plt.yticks(tick_marks, classes)
+    plt.grid(False)
+
 
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
@@ -74,23 +72,18 @@ plt.show()
 
 
 <text>
-### 4.2 : Random Forest Classifier
+### 4.2 : Decision Tree Classifier
 
-Now, lets train a tree based model : random forest
+Lets train a decision tree classifier
 </text>
 
 <code>
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-valp = model.predict(X_valid)
-pred = model.predict(xtest)
+model2 = DecisionTreeClassifier()
+model2.fit(X_train, y_train)
+valp = model2.predict(X_valid)
 
-## will only plot auc roc if the target is binary
-try:
-    generate_auc(y_valid,valp)
-except:
-    pass
-
+if len(distinct_Y) == 2:
+    generate_auc(y_valid,valp, model_name="decision tree classifier")
 </code>
 
 
@@ -106,25 +99,68 @@ plt.show();
 
 
 <text>
-### 4.3 : xgBoost Classifier
+### 4.3 : Random Forest Classifier
+
+Now, lets train a tree based model : random forest
+</text>
+
+<code>
+model3 = RandomForestClassifier()
+model3.fit(X_train, y_train)
+valp = model3.predict(X_valid)
+
+if len(distinct_Y) == 2:
+    generate_auc(y_valid,valp, model_name="random forest classifier")
+</code>
+
+
+<code>
+cnf_matrix = confusion_matrix(y_valid, valp)
+np.set_printoptions(precision=2)
+
+plt.figure(figsize=(6,5));
+plot_confusion_matrix(cnf_matrix, classes=distinct_Y, title='Confusion matrix Validation Set');
+plt.show();
+</code>
+
+<text>
+### 4.4 : ExtraTrees Classifier
+
+Now, lets train another tree based model : extra trees classifier
+</text>
+
+<code>
+model4 = ExtraTreesClassifier()
+model4.fit(X_train, y_train)
+valp = model4.predict(X_valid)
+
+if len(distinct_Y) == 2:
+    generate_auc(y_valid,valp, model_name="extratrees classifier")
+</code>
+
+<code>
+cnf_matrix = confusion_matrix(y_valid, valp)
+np.set_printoptions(precision=2)
+
+plt.figure(figsize=(6,5));
+plot_confusion_matrix(cnf_matrix, classes=distinct_Y, title='Confusion matrix Validation Set');
+plt.show();
+</code>
+
+<text>
+### 4.5 : xgBoost Classifier
 
 Lets train the extereme gradient boosting : xgboost classifier
 </text>
 
 <code>
-model = xgb.XGBClassifier(n_estimators=300, learning_rate=0.01)
-model.fit(X_train, y_train)
-valp = model.predict(X_valid)
-pred = model.predict(xtest)
+model5 = xgb.XGBClassifier(n_estimators=300, learning_rate=0.01)
+model5.fit(X_train, y_train)
+valp = model5.predict(X_valid)
 
-## will only plot auc roc if the target is binary
-try:
-    generate_auc(y_valid,valp)
-except:
-    pass
-
+if len(distinct_Y) == 2:
+    generate_auc(y_valid,valp, model_name="xgboost")
 </code>
-
 
 <code>
 cnf_matrix = confusion_matrix(y_valid, valp)
@@ -134,48 +170,3 @@ plt.figure(figsize=(6,5))
 plot_confusion_matrix(cnf_matrix, classes=distinct_Y, title='Confusion matrix Validation Set')
 plt.show()
 </code>
-
-<text>
-## Step 5: Feature Importance
-
-Lets look at some of the important features
-</text>
-
-<code>
-plt.figure(figsize=(6,5))
-plot_importance(model, max_num_features=10);
-</code>
-
-<text>
-## Step 6 : Ensembling 
-
-Lets create a simple stacking model
-</text>
-
-<code>
-
-
-
-</code>
-
-
-
-
-<text>
-## Step 7 : Create Submission File
-
-Finally, create the submission file from the extereme graident boosting model
-</text>
-
-<code>
-sub = pd.DataFrame()
-sub[_id] = test_id
-sub[_target] = pred
-sub.to_csv("baseline_submission.csv", index=False)
-sub.head(10)
-</code>
-
-
-
-
-

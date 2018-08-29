@@ -1,0 +1,51 @@
+<text>
+## Step 5: Feature Importance
+
+Lets look at some of the important features from the dataset
+</text>
+
+<code>
+plt.figure(figsize=(12,8))
+xgb.plot_importance(model5, max_num_features=10);
+</code>
+
+<text>
+## Step 6 : Model Ensembling
+
+Lets create a simple blender. Other options to extend are stacking / majority voting / rank averaging etc. 
+</text>
+
+<code>
+models = [model1, model2, model3, model4, model5]
+preds = np.zeros(shape=(xtest.shape[0],))
+try:
+    for model in models:
+        pred = model.predict(xtest)/ len(models)
+        preds += pred
+    print (preds[:100])
+except:
+    print ("this is a dataset kernel, no test data for predictions")
+</code>
+
+<text>
+## Step 7 : Create Submission File
+
+Finally, create the submission file from the extereme graident boosting model
+</text>
+
+<code>
+try:
+    pred = model5.predict(xtest)
+    sub = pd.DataFrame()
+    sub[_id] = test_id
+    sub[_target] = pred
+    sub.to_csv("baseline_submission.csv", index=False)
+    print ("Submission File Generated, here is the snapshot: ")
+    print (sub.head(10))
+except:
+    print ("This is a dataset kernel, no need to create a submission file :)")
+</code>
+
+<text>
+Thanks for viewing this kernel, hopefully you can get ideas to start your own kernel. 
+</text>
