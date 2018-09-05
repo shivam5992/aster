@@ -3,7 +3,7 @@ Aster is a python based bot (or a module), which is capabale of writing baseline
 
 ### Key features 
 
-1. Can create kernels on Compeititon and Datasets both  
+1. Can create kernels on Competition and Datasets both  
 2. Can create kernels on datasets with binary / multi classification  
 3. Can create kernels on text datasets and numerical datasets  
 4. Performs Quick Exploration, Preprocessing, Feature Engineering, and Modelling  
